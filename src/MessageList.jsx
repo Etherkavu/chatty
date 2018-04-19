@@ -8,20 +8,22 @@ class MessageList extends Component {
      return <Message
         key={ messages.id }
         username={ messages.username }
-        content={ messages.content } />
+        content={ messages.content }
+        colour= {this.props.colour} />
     });
 
     return (
-      <body>
+      <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <p href="/" className="user-counter"> {this.props.count} Users online</p>
         </nav>
         <main className="messages">
           <section className="posts">
             { Messages }
           </section>
         </main>
-      </body>
+      </div>
     )
   }
 }

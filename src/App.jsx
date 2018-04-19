@@ -6,53 +6,74 @@ import MessageList from './MessageList.jsx';
 
 
 require('../styles/application.scss');
+function colourpicker(){
+  const colours = ['#2E8B57','#556B2F' ,'#808000' ,'#6B8E23']
+  const num = Math.floor(Math.random() * 3);
+  return colours[num];
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id : "1",
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {
-          id: "2",
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        },
-      ]
+      currentUser: {name: "Anonymous"},
+      messages: [],
+      userCount: 0,
+      nameColour: colourpicker()
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-    componentDidMount() {
-    console.log("componentDidMount <App />");
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-
-      const newMessage = {id: this.state.messages.length+1, username: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      this.setState({messages: messages})
-    }, 3000);
+  componentDidMount() {
+    this.socket = new WebSocket('ws://localhost:3001');
+    this.socket.addEventListener('message', event => {
+      const messageObject = JSON.parse(event.data);
+      if (messageObject.messageType === 'message') {
+        this.setState({
+          messages: this.state.messages.concat(messageObject),
+        })
+      } else if (messageObject.messageType === 'notification') {
+        const newName = messageObject.content
+        messageObject.content =
+          <div className="notification">
+          <span className="notification-content"> { this.state.currentUser.name } has changed their name to: { messageObject.content }</span>
+        </div>
+        messageObject.username = ''
+        this.setState({
+          currentUser: {name: newName},
+          messages: this.state.messages.concat(messageObject),
+        })
+      } else if (messageObject.messageType === 'userCount') {
+        this.setState({
+          userCount: messageObject.count
+        })
+      }
+    })
   }
 
-  onSubmit(newSubmit) {
-      const newMessage = {id: this.state.messages.length+1, username: this.state.currentUser.name, content: newSubmit};
+  sendMessage(content) {
+    const messageObject = {
+      content,
+    };
+    this.socket.send(JSON.stringify(messageObject));
+  }
+
+  onSubmit(newSubmit, user, type) {
+    const newMessage = {type: type, id: this.state.messages.length+1, username: this.state.currentUser.name, content: newSubmit};
     const messages = this.state.messages.concat(newMessage)
-    this.setState({messages: messages})
+    console.log(newMessage)
+    this.sendMessage(newMessage)
   }
 
   render() {
     return (
       <div>
-        <MessageList messages={ this.state.messages } />
+        <MessageList colour={ this.state.nameColour} messages={ this.state.messages } count={ this.state.userCount} />
         <Footer currentUser={ this.state.currentUser } onSubmit={ this.onSubmit } />
       </div>
     );
   }
 }
+
 export default App;
