@@ -71,7 +71,8 @@ wss.on('connection', (ws) => {
       messageType: newMessage.content.type,
       id: uuidv4(),
       content: newMessage.content.content,
-      username: newMessage.content.username
+      username: newMessage.content.username,
+      colour: newMessage.content.colour
     };
     // send this message to everyone
     console.log("sending:", outgoingMessage)

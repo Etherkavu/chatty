@@ -6,6 +6,7 @@ import MessageList from './MessageList.jsx';
 
 
 require('../styles/application.scss');
+
 function colourpicker(){
   const colours = ['#2E8B57','#556B2F' ,'#808000' ,'#6B8E23']
   const num = Math.floor(Math.random() * 3);
@@ -20,6 +21,7 @@ class App extends Component {
       currentUser: {name: "Anonymous"},
       messages: [],
       userCount: 0,
+      nameColour: colourpicker()
 
     };
     this.onSubmit = this.onSubmit.bind(this);
@@ -59,7 +61,7 @@ class App extends Component {
   }
 
   onSubmit(newSubmit, user, type) {
-    const newMessage = {type: type, username: this.state.currentUser.name, content: newSubmit};
+    const newMessage = {type: type, username: this.state.currentUser.name, content: newSubmit, colour: this.state.nameColour};
     const messages = this.state.messages.concat(newMessage)
     console.log(newMessage)
     this.sendMessage(newMessage)

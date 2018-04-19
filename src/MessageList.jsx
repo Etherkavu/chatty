@@ -9,7 +9,7 @@ class MessageList extends Component {
         key={ messages.id }
         username={ messages.username }
         content={ messages.content }
-        colour= {this.props.colour} />
+        colour= { messages.colour } />
     });
 
     return (
