@@ -20,7 +20,7 @@ class App extends Component {
       currentUser: {name: "Anonymous"},
       messages: [],
       userCount: 0,
-      nameColour: colourpicker()
+
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -41,7 +41,6 @@ class App extends Component {
         </div>
         messageObject.username = ''
         this.setState({
-          currentUser: {name: newName},
           messages: this.state.messages.concat(messageObject),
         })
       } else if (messageObject.messageType === 'userCount') {
@@ -60,16 +59,21 @@ class App extends Component {
   }
 
   onSubmit(newSubmit, user, type) {
-    const newMessage = {type: type, id: this.state.messages.length+1, username: this.state.currentUser.name, content: newSubmit};
+    const newMessage = {type: type, username: this.state.currentUser.name, content: newSubmit};
     const messages = this.state.messages.concat(newMessage)
     console.log(newMessage)
     this.sendMessage(newMessage)
+    if (type === 'notification'){
+      this.setState({
+        currentUser: {name: newSubmit},
+      })
+    }
   }
 
   render() {
     return (
       <div>
-        <MessageList colour={ this.state.nameColour} messages={ this.state.messages } count={ this.state.userCount} />
+        <MessageList messages={ this.state.messages } count={ this.state.userCount} />
         <Footer currentUser={ this.state.currentUser } onSubmit={ this.onSubmit } />
       </div>
     );
