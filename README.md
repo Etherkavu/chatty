@@ -21,7 +21,7 @@ Users can freely change username, with a prompt in the chat to all active users 
 Each user generates one of 4 random shades of green for their user name, this shade persists through name changes.
 
 ### Screenshot
-
+!["Screenshot of app"](https://github.com/Etherkavu/chatty/blob/master/docs/Forest_chatty.png?raw=true)
 ### Dependencies
 
 * React
