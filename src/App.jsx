@@ -8,6 +8,7 @@ import MessageList from './MessageList.jsx';
 require('../styles/application.scss');
 
 {/* Function called to assign a random colour to this session*/}
+
 function colourpicker(){
   const colours = ['#2E8B57','#556B2F' ,'#808000' ,'#8FBC8F']
   const num = Math.floor(Math.random() * 3);
@@ -17,12 +18,14 @@ function colourpicker(){
 class App extends Component {
   constructor(props) {
     super(props);
+
 {/* States:
       currentUser: can be set by the user freely, a notice will be published of     whom changed to what.
       messages: the collection of posts to be displayed.
       userCount: variable calculated on the server and sent to client.
       nameColour: random green colour for the users name, name coours are consistent between chat clients.
   */}
+
     this.state = {
       currentUser: {name: "Anonymous"},
       messages: [],
@@ -36,6 +39,7 @@ class App extends Component {
   componentDidMount() {
 
   {/* Connects to websocket */}
+
     this.socket = new WebSocket('ws://localhost:3001');
     this.socket.addEventListener('message', event => {
       const messageObject = JSON.parse(event.data);
@@ -43,6 +47,7 @@ class App extends Component {
   {/* Main logic if
       if circut will check which type of message is being sent and handle properly.
     */}
+
       if (messageObject.messageType === 'message') {
         this.setState({
           messages: this.state.messages.concat(messageObject),
@@ -66,7 +71,9 @@ class App extends Component {
   }
 
   sendMessage(content) {
+
   {/* Sends object as a readable JSON string to server */}
+
     const messageObject = {
       content,
     };
@@ -75,11 +82,15 @@ class App extends Component {
 
 
   onSubmit(newSubmit, user, type) {
+
   {/* Formats submitted info into single object*/}
+
     const newMessage = {type: type, username: this.state.currentUser.name, content: newSubmit, colour: this.state.nameColour};
     const messages = this.state.messages.concat(newMessage)
     this.sendMessage(newMessage)
+
     {/* Updates local user state is needed*/}
+
     if (type === 'notification'){
       this.setState({
         currentUser: {name: newSubmit},
