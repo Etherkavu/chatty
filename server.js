@@ -47,26 +47,26 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
+//Called when user disconnects or connects, sends current user count to client
 function sendConnections(number, mod){
   if (mod === 'up'){
      connections = connections + 1;
+     console.log('Client connected');
   }else if (mod === 'down'){
      connections = connections - 1;
+     console.log('Client disconnected');
   }
   const outgoingMessage = {
       messageType: 'userCount',
       count: connections
     };
-    console.log("sending user count");
   wss.broadcast(JSON.stringify(outgoingMessage));
 }
 
 wss.on('connection', (ws) => {
   sendConnections(connections, 'up');
-  console.log('Client connected');
   ws.on('message', function incoming(message) {
     newMessage = JSON.parse(message)
-    console.log('user', newMessage.content.username, 'sent', newMessage.content.content);
     const outgoingMessage = {
       messageType: newMessage.content.type,
       id: uuidv4(),
@@ -75,7 +75,6 @@ wss.on('connection', (ws) => {
       colour: newMessage.content.colour
     };
     // send this message to everyone
-    console.log("sending:", outgoingMessage)
     wss.broadcast(JSON.stringify(outgoingMessage));
 
   });

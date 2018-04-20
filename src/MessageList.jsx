@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Message from './Message.jsx';
 
+{/* Manages the handling of message data as its passed it to, and the creation of message objects */}
 class MessageList extends Component {
   render() {
   const Messages = this.props.messages.map( messages => {
@@ -15,7 +16,7 @@ class MessageList extends Component {
     return (
       <div>
         <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
+          <a href="/" className="navbar-brand">Forest Chatty</a>
           <p href="/" className="user-counter"> {this.props.count} Users online</p>
         </nav>
         <main className="messages">
